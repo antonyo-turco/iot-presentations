@@ -1,12 +1,42 @@
 % Opening frame
+\section{Overview}
 \begin{frame}
+\frametitle{Project Overview}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.6\textwidth}
+\begin{block}{Mission}
+Detect intrusion attempts by observing abnormal door and window vibrations together with related physical signals.
+\end{block}
 
-This template is a based on \hrefcol{https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx}{SINTEF Presentation} from \hrefcol{mailto:federico.zenith@sintef.no}{Federico Zenith} and its derivation \hrefcol{https://github.com/TOB-KNPOB/Beamer-LaTeX-Themes}{Beamer-LaTeX-Themes} from Liu Qilong
+\begin{itemize}
+\item \textbf{Wireless}: battery-powered nodes with low-impact installation.
+\item \textbf{Adaptive}: machine learning learns the normal environmental baseline.
+\item \textbf{Actionable}: the system raises alerts and acts in the environment.
+\end{itemize}
+\end{column}
 
-\vspace{\baselineskip}
+\begin{column}{0.36\textwidth}
+\begin{colorblock}[black]{sintefyellow}{Detection Flow}
+\begin{enumerate}
+\item Sense
+\item Classify
+\item Alert
+\item Respond
+\end{enumerate}
+\end{colorblock}
 
-In the following you find a brief introduction on how to use \LaTeX\ and the beamer package to prepare slides, based on the one written by \hrefcol{mailto:federico.zenith@sintef.no}{Federico Zenith} for \hrefcol{https://www.overleaf.com/latex/templates/sintef-presentation/jhbhdffczpnx}{SINTEF Presentation}
+\vspace{0.4cm}
+\centering
+\begin{tikzpicture}
+\clip[rounded corners=12pt] (0,0) rectangle (3.1,3.1);
+\node[anchor=south west, inner sep=0] at (0,0)
+	{\includegraphics[width=5.6cm,height=3.1cm,clip,trim=3.0cm 0cm 1.4cm 0cm]{images/burglar_entering_home.jpeg}};
+\draw[rounded corners=12pt, line width=0.8pt, draw=sintefgrey] (0,0) rectangle (3.1,3.1);
+\end{tikzpicture}
 
-% This template is released under \hrefcol{https://creativecommons.org/licenses/by-nc/4.0/legalcode}{Creative Commons CC BY 4.0} license
+\vspace{0.2cm}
+\end{column}
+\end{columns}
+
 
 \end{frame}

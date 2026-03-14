@@ -1,6 +1,7 @@
 MAIN       = main
 BUILD_DIR  = build
 OUTPUT_DIR = outputs
+SLIDES     = $(wildcard slides/*.tex)
 
 PDFLATEX_FLAGS = -output-directory=$(BUILD_DIR)
 
@@ -8,7 +9,7 @@ PDFLATEX_FLAGS = -output-directory=$(BUILD_DIR)
 
 all: $(OUTPUT_DIR)/$(MAIN).pdf
 
-$(OUTPUT_DIR)/$(MAIN).pdf: $(MAIN).tex $(wildcard *.sty) | $(BUILD_DIR) $(OUTPUT_DIR)
+$(OUTPUT_DIR)/$(MAIN).pdf: $(MAIN).tex $(wildcard *.sty) $(SLIDES) | $(BUILD_DIR) $(OUTPUT_DIR)
 	pdflatex $(PDFLATEX_FLAGS) $(MAIN).tex
 	pdflatex $(PDFLATEX_FLAGS) $(MAIN).tex
 	cp $(BUILD_DIR)/$(MAIN).pdf $(OUTPUT_DIR)/$(MAIN).pdf
