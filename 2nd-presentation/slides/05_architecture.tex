@@ -1,0 +1,52 @@
+% System Architecture section
+\section{System Architecture}
+
+% --- Slide: Full State Diagram ---
+\begin{titlepic}{images/project_schema_simplified.png}{Simplified Logic Flow}
+\end{titlepic}
+
+% --- Slide: Detailed Architecture ---
+\begin{titlepic}[0.85]{images/project_schema.png}{Detailed State Diagram}
+\end{titlepic}
+
+% --- Slide: Actuators and Response ---
+\begin{frame}{Alarm Response Chain}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.55\textwidth}
+\begin{block}{What Happens on Alarm}
+After a valid knock is classified with confidence above threshold, the Central Hub orchestrates a multi-stage response.
+\end{block}
+\vspace{0.2cm}
+\begin{enumerate}
+\item \textbf{Siren}: active buzzer on the hub fires immediately
+\item \textbf{Floodlights}: optional relay-controlled lights
+\item \textbf{Deadbolt}: optional electronic lock engagement
+\item \textbf{Neighbor wake-up}: ESP-NOW broadcast wakes adjacent nodes for richer contextual sensing
+\item \textbf{Cloud alert}: MQTT publish $\rightarrow$ dashboard notification $\rightarrow$ push to user phone
+\end{enumerate}
+\end{column}
+\begin{column}{0.42\textwidth}
+% SUGGESTED IMAGE: images/actuator_setup.jpg
+% Photo of siren buzzer, relay module, or similar actuator hardware
+\centering
+\begin{tikzpicture}[
+  step/.style={draw=maincolor, rounded corners=4pt, fill=sintefgrey,
+               minimum width=3.6cm, minimum height=0.65cm, align=center,
+               font=\scriptsize},
+  arr/.style={->, thick, maincolor}
+]
+\node[step, fill=sintefyellow!40] (det) at (0, 3.4) {Valid Knock Detected};
+\node[step] (sir) at (0, 2.5) {Siren Activated};
+\node[step] (lit) at (0, 1.7) {Floodlights ON};
+\node[step] (nei) at (0, 0.9) {Neighbor Nodes Woken};
+\node[step] (cld) at (0, 0.1) {Cloud Alert Sent};
+\node[step, fill=sintefgreen!30] (usr) at (0,-0.7) {User Notified};
+\draw[arr] (det) -- (sir);
+\draw[arr] (sir) -- (lit);
+\draw[arr] (lit) -- (nei);
+\draw[arr] (nei) -- (cld);
+\draw[arr] (cld) -- (usr);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}

@@ -1,0 +1,59 @@
+% Improvements 1 & 2
+\section{Improvements}
+
+% --- Improvement 1: Wake-up Circuit ---
+\begin{frame}{Wake-up: LM393 $\rightarrow$ TLC393}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item LM393 comparator
+    \item $2.5$\,mA deep sleep
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item TLC393 comparator
+    \item $11\,\mu$A deep sleep
+    \item $\mathbf{227\times}$ \textbf{less current}
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large $2.5\,\text{mA} \xrightarrow{\text{swap}} 11\,\mu\text{A}$}
+\end{frame}
+
+% --- Improvement 2: Protocol ---
+\begin{frame}{Protocol: BLE $\rightarrow$ ESP-NOW}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item BLE for local comms
+    \item $\sim500$\,ms pairing
+    \item $\sim7.5$\,ms TX latency
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item ESP-NOW
+    \item \textbf{No pairing overhead}
+    \item $<2$\,ms TX
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large Shorter radio-on time $=$ \textbf{less energy per alarm}}
+\end{frame}

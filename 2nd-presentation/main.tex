@@ -1,0 +1,41 @@
+\documentclass{beamer}
+\usepackage{amsfonts,amsmath,oldgerm}
+\usepackage{tikz}
+\usetheme{sintef}
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/background}
+
+\newcommand{\hrefcol}[2]{\textcolor{cyan}{\href{#1}{#2}}}
+
+\title{KnockKnock}
+\subtitle{Low-Cost IoT Intrusion Detection for Doors and Windows}
+\course{IoT: Algorithms and Services}
+\author{Alessandro Coccia, \textit{1988689} \\ Leonardo Santucci, \textit{2282707} \\[-0.5em] Antonio Turco, \textit{1986183}}
+\IDnumber{}
+\date{Academic Year 2025/2026}
+
+\begin{document}
+\maketitle
+
+% Slide 0: Overview (1 slide)
+\input{slides/01_opening.tex}
+
+% Slides 1–2: Architecture
+\input{slides/02_introduction.tex}
+
+% Slides 3–4: Energy & Duty Cycle
+\input{slides/03_personalization.tex}
+
+% Slides 5–6: Improvements (Wake-up & Protocol)
+\input{slides/04_connectivity.tex}
+
+% Slides 7–8: Improvements (ADC & MCU)
+\input{slides/04_summary.tex}
+
+\backmatter
+
+\end{document}
