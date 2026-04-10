@@ -1,5 +1,5 @@
 % Energy & Duty Cycle slides (2 slides)
-\section{Energy \& Duty Cycle}
+
 
 % --- Slide 1: Duty Cycle ---
 \begin{frame}{Duty Cycle}
@@ -12,8 +12,6 @@
 \setbeamercolor{itemize subitem}{fg=bulletcol}
 \setbeamercolor{itemize subsubitem}{fg=bulletcol}
   \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
-    \item \textbf{ESP32-C3 active:} 20\,\text{mA}
-  \item \textbf{Peak current (WiFi / ESP-NOW TX):} 200\,\text{mA}
   \item \textbf{Alarm rate:} 12 alarms/hour = 288 alarms/day
   \item \textbf{Active time per alarm:} 30\,\text{s} $\Rightarrow$ 86\,400\,\text{s/day} total wake time (worst case: 1 alarm/s)
   \item \textbf{Duty cycle:} 10\%
@@ -37,9 +35,6 @@ The comparator never sleeps.
   % Active bar
   \fill[sintefred!80] (0,1.1) rectangle (0.8, 1.8);
   \node[font=\small, align=left, anchor=west] at (0.6, 1.45) {Active  10\%};
-  % Labels
-  \node[font=\scriptsize, anchor=west] at (0, -0.3) {$50\,\mu$A};
-  \node[font=\scriptsize, sintefred, anchor=west] at (0, 2.0) {$5$\,mA};
   % Annotation
   \draw[<->, thick, darkgray] (0, -0.6) -- (4, -0.6)
     node[midway, below, font=\scriptsize]{24 hours};

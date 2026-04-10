@@ -65,6 +65,7 @@
     \item ESP32-C3 active baseline: $I_{active}=20\,\text{mA}$
     \item Peak TX: $200\,\text{mA}$ (1.5 ms per alarm), 288 alarms/day
     \item Duty cycle: $D=10\%$
+    \item Upper bound for wifi TX: $200\,\text{mA} \times 1\,\text{s}$
   \end{itemize}
 
   \vspace{0.5em}
@@ -72,13 +73,13 @@
   
   \[
     I_{avg} = D\cdot I_{active} + (1-D)\cdot I_{sleep}
-           = 0.10\times20\,\mathrm{mA} + 0.90\times0.061\,\mathrm{mA}
-           \approx 2.06\,\mathrm{mA}
+           = 0.10\times26\,\mathrm{mA} + 0.90\times0.061\,\mathrm{mA}
+           \approx 2.65\,\mathrm{mA}
   \]
 
   \textbf{Estimated battery life}
   \[
-    t_{life} = \frac{2600\,\mathrm{mAh}}{2.06\,\mathrm{mA}} \approx 1262\,\mathrm{h} \approx 52.6\,\mathrm{days}
+    t_{life} = \frac{2600\,\mathrm{mAh}}{2.65\,\mathrm{mA}} \approx 981\,\mathrm{h} \approx 41\,\mathrm{days}
   \]
 
   \vspace{0.5em}
