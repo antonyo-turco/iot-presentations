@@ -1,0 +1,33 @@
+% False positive handling slide
+
+\begin{frame}[shrink=15]{False Positives --- Two-Stage Gate}
+\begin{columns}[T, onlytextwidth]
+\begin{column}{0.48\textwidth}
+  \begin{colorblock}[white]{sintefred}{Stage 1 --- Hardware gate}
+  \small
+  ADXL362 internal threshold\\[2pt]
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item Default 150\,mg; adaptive 50--250\,mg
+    \item Traffic, HVAC, footsteps: below threshold, MCU never wakes
+    \item Threshold self-adjusts at runtime
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.48\textwidth}
+  \begin{colorblock}[white]{maincolor}{Stage 2 --- ML gate}
+  \small
+  K-means on 47-D FFT features\\[2pt]
+  \begin{itemize}\setlength\itemsep{1pt}
+    \item BASELINE: dist to nearest centroid $\leq \mu + 3\sigma$
+    \item DEVIATION: all clusters too far $\rightarrow$ alarm
+    \item Trained in 2 min on the actual door
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+
+\vspace{0.3em}
+\begin{block}{Result}
+  Both stages must fire before an alarm is sent. Ambient vibrations fail Stage~1; similar-amplitude events within the trained signature fail Stage~2.
+\end{block}
+\end{frame}

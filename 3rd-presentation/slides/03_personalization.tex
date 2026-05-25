@@ -1,0 +1,58 @@
+% Energy & Duty Cycle slides (2 slides)
+
+
+% --- Slide 1: Duty Cycle ---
+\begin{frame}{Duty Cycle}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.52\textwidth}
+{
+\fontsize{10pt}{12pt}\selectfont
+\definecolor{bulletcol}{HTML}{C8B664}
+\setbeamercolor{itemize item}{fg=bulletcol}
+\setbeamercolor{itemize subitem}{fg=bulletcol}
+\setbeamercolor{itemize subsubitem}{fg=bulletcol}
+  \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
+  \item \textbf{Alarm rate:} 12 alarms/hour = 288 alarms/day
+  \item \textbf{Active time per alarm:} 30\,\text{s} $\Rightarrow$ 86\,400\,\text{s/day} total wake time (worst case: 1 alarm/s)
+  \item \textbf{Duty cycle:} 10\%
+\end{itemize}
+
+\vspace{0cm}
+\begin{block}{Key principle}
+\scriptsize\setlength{\parskip}{0pt} The MCU is \textbf{off by default.}\\
+The comparator never sleeps.
+\end{block}
+}
+
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Duty cycle bar (visual simplified)
+  \fill[maincolor!20] (0,0) rectangle (4, 0.7);
+  \fill[maincolor]    (0,0) rectangle (0.4, 0.7);
+  \node[font=\small, maincolor] at (2.2, 0.35) {Sleep  90\%};
+  % Active bar
+  \fill[sintefred!80] (0,1.1) rectangle (0.8, 1.8);
+  \node[font=\small, align=left, anchor=west] at (0.6, 1.45) {Active  10\%};
+  % Annotation
+  \draw[<->, thick, darkgray] (0, -0.6) -- (4, -0.6)
+    node[midway, below, font=\scriptsize]{24 hours};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+% --- Slide 2: Wiring diagram & photo ---
+\begin{frame}{Wiring \& Photo}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.50\textwidth}
+  \centering
+  \includegraphics[width=0.95\textwidth,keepaspectratio]{images/electric_schema.jpeg}
+\end{column}
+\begin{column}{0.50\textwidth}
+  \centering
+  \includegraphics[width=0.95\textwidth,keepaspectratio]{images/electric_photo.jpeg}
+\end{column}
+\end{columns}
+\end{frame}

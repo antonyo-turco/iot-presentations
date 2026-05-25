@@ -1,0 +1,11 @@
+# Compile the presentation (pdflatex via WSL)
+wsl make
+
+# Clean build artifacts and output PDF
+wsl make clean
+
+# Full rebuild: clean then compile
+wsl make clean && wsl make
+
+# Open the output PDF (Windows)
+start outputs\main.pdf

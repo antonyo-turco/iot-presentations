@@ -1,5 +1,6 @@
-## github folder
+## LLM working folders (instructions, notes)
 .github/
+.notes/
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

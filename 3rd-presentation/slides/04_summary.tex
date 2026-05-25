@@ -1,0 +1,83 @@
+% Improvements 3 & 4
+
+% --- Improvement 3: Detection ---
+\begin{frame}{Detection: Fixed threshold $\rightarrow$ On-device K-means ML}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item Single amplitude threshold
+    \item High false positive rate
+    \item No learning, no adaptation
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item 256-pt FFT, 47 features
+    \item K-means ($K=10$) trained on-site
+    \item Per-cluster $\mu + 3\sigma$ threshold
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large Learns your door's signature $=$ \textbf{fewer false alarms}}
+\end{frame}
+
+% --- Improvement 4: MCU ---
+\begin{frame}{MCU: ESP32 V1 $\rightarrow$ ESP32-C3 RISC-V}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item ESP32 DOIT DevKit V1 dual-core
+    \item Higher idle current: $\sim$4\,mA (deep sleep)
+    \item Oversized for the task
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item ESP32-C3 
+    \item $50\,\mu\text{A}$ deep sleep
+    \item 20\,mA active
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large Right-sized MCU $=$ \textbf{months of battery life}}
+\end{frame}
+
+% --- Post-improvements: Duty Cycle -- Energy Calculation (actual values only) ---
+\begin{frame}{Duty Cycle -- Energy Calculation (Post-improvements)}
+  \textbf{Post-improvement parameters}
+  \begin{itemize}
+    \item Deep sleep: MCU $50\,\mu\text{A}$ + ADXL362 $1.8\,\mu\text{A}$ $\rightarrow$ $I_{sleep}\approx52\,\mu\text{A}$
+    \item ESP32-C3 active baseline: $I_{active}=20\,\text{mA}$
+    \item Peak TX: $200\,\text{mA}$ (1.5 ms per alarm), 288 alarms/day
+    \item Duty cycle: $D=10\%$
+    \item Upper bound for wifi TX: $200\,\text{mA} \times 1\,\text{s}$
+  \end{itemize}
+
+  \textbf{Average current}
+  \[
+    I_{avg} = D\cdot I_{active} + (1-D)\cdot I_{sleep}
+           = 0.10\times20\,\mathrm{mA} + 0.90\times0.052\,\mathrm{mA}
+           \approx 2.05\,\mathrm{mA}
+  \]
+  \textbf{Estimated battery life}
+  \[
+    t_{life} = \frac{2600\,\mathrm{mAh}}{2.05\,\mathrm{mA}} \approx 1268\,\mathrm{h} \approx 53\,\mathrm{days}
+  \]
+  \scriptsize TX peaks (200 mA $\times$ 1.5 ms $\times$ 288/day) are negligible on the daily average.
+\end{frame}

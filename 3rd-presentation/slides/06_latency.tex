@@ -1,0 +1,29 @@
+% Detection latency slide
+\section{Evaluation}
+
+\begin{frame}{Detection Latency --- End to End}
+\centering
+\renewcommand{\arraystretch}{1.15}
+\small
+\begin{tabular}{l r r}
+\toprule
+\textbf{Stage} & \textbf{Duration} & \textbf{Cumulative} \\
+\midrule
+ADXL362 INT1 fires (hardware threshold) & $<1$ ms      & $<1$ ms     \\
+ESP32-C3 wakes from deep sleep          & $\sim10$ ms  & $\sim11$ ms \\
+Sample 256 points @ 100 Hz             & $2560$ ms    & $2571$ ms   \\
+FFT + 47-feature extraction            & $<50$ ms     & $2621$ ms   \\
+K-means inference ($K=10$)             & $<10$ ms     & $2631$ ms   \\
+ESP-NOW TX to gateway                  & $\sim1.5$ ms & $2633$ ms   \\
+UART AES-GCM bridge to hub             & $<5$ ms      & $2638$ ms   \\
+MQTT publish to cloud                  & $<100$ ms    & $\mathbf{<2.74\ s}$ \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.3em}
+\normalsize
+\begin{block}{Key insight}
+  The 2.56\,s window is intentional --- it captures the full vibration event before classifying.
+  Alert decision: $<200$ ms. Total latency dominated by sampling physics, not communication.
+\end{block}
+\end{frame}

@@ -1,0 +1,56 @@
+\documentclass{beamer}
+\usepackage{amsfonts,amsmath,oldgerm}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric}
+\usepackage{booktabs}
+\usepackage{array}
+\usetheme{sintef}
+
+\newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
+
+\usefonttheme[onlymath]{serif}
+
+\titlebackground*{assets/background}
+
+\newcommand{\hrefcol}[2]{\textcolor{cyan}{\href{#1}{#2}}}
+
+\title{KnockKnock}
+\subtitle{Low-Cost IoT Intrusion Detection for Doors and Windows}
+\course{IoT: Algorithms and Services}
+\author{Alessandro Coccia, \textit{1988689} \\ Leonardo Santucci, \textit{2282707} \\[-0.5em] Antonio Turco, \textit{1986183}}
+\IDnumber{}
+\date{Academic Year 2025/2026}
+
+\begin{document}
+\maketitle
+
+% Problem statement (10 sec)
+\input{slides/01_opening.tex}
+
+% System architecture (TikZ figure)
+\input{slides/02_introduction.tex}
+
+% Requirements with numbers
+\input{slides/02b_requirements.tex}
+
+% Energy & Duty Cycle
+\input{slides/03_personalization.tex}
+
+% Improvements 1 & 2 (Wake-up circuit & Protocol)
+\input{slides/04_connectivity.tex}
+
+% Improvements 3 & 4 (Acquisition & MCU) + Energy calc
+\input{slides/04_summary.tex}
+
+% Security layers
+\input{slides/05_security.tex}
+
+% Detection latency
+\input{slides/06_latency.tex}
+
+% False positive handling
+\input{slides/07_false_positives.tex}
+
+\backmatter
+
+\end{document}

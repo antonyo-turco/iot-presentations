@@ -1,0 +1,61 @@
+% Improvements 1 & 2
+\section{Improvements}
+
+% --- Improvement 1: Wake-up Circuit ---
+\begin{frame}{Wake-up: LM393 comparator $\rightarrow$ ADXL362}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item External LM393 comparator
+    \item Always-on: $1.5$\,mA
+    \item Piezo-based, no data
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item ADXL362 activity detector
+    \item Monitoring: $1.8\,\mu$A
+    \item INT1 $\rightarrow$ GPIO wakeup
+    \item $\mathbf{833\times}$ \textbf{less current}
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large $1.5\,\text{mA} \xrightarrow{\text{ADXL362}} 1.8\,\mu\text{A}$}
+\end{frame}
+
+% --- Improvement 2: Protocol ---
+\begin{frame}{Protocol: BLE $\rightarrow$ ESP-NOW}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item BLE for local comms
+    \item $\sim500$\,ms pairing
+    \item $\sim7.5$\,ms TX latency
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item ESP-NOW
+    \item \textbf{No pairing overhead}
+    \item $<2$\,ms TX
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.5cm}
+\centering
+{\Large Shorter radio-on time $=$ \textbf{less energy per alarm}}
+\end{frame}
