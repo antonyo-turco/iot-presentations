@@ -1,62 +1,41 @@
 %:ADXL362: merged comparison + rationale ---
 \begin{frame}[shrink=15]{Wake-up Sensor: LM393 $\rightarrow$ ADXL362}
+
 \begin{columns}[T,onlytextwidth]
-
-\begin{column}{0.54\textwidth}
-  \begin{columns}[T,onlytextwidth]
-  \begin{column}{0.48\textwidth}
-    \begin{colorblock}[white]{sintefred}{\small Before}
-    \scriptsize
-    LM393 comparator\\[2pt]
-    Always-on: $1.5\,\text{mA}$\\
-    Piezo-based, no data\\
-    Manual threshold (trimmer)
-    \end{colorblock}
-  \end{column}
-  \begin{column}{0.48\textwidth}
-    \begin{colorblock}[white]{maincolor}{\small After}
-    \scriptsize
-    ADXL362 accelerometer\\[2pt]
-    Activity detect: $270\,\text{nA}$\\
-    INT1 $\rightarrow$ GPIO wakeup\\
-    \textbf{5500$\times$ less current}
-    \end{colorblock}
-  \end{column}
-  \end{columns}
-
-  \vspace{0.35cm}
-  \begin{itemize}\setlength\itemsep{5pt}
-    \item \textbf{SW-configurable threshold}: activity level set via SPI register; no physical potentiometer needed on re-deployment
-    \item \textbf{200\,Hz sampling}: window vibrations are sub-100\,Hz; 100$\times$ less ADC active time vs.\ 20\,kHz piezo
-    \item \textbf{Internal mount}: avoids weather exposure; tunable SW threshold compensates for reduced sensitivity
-  \end{itemize}
+\begin{column}{0.48\textwidth}
+  \begin{colorblock}[white]{sintefred}{\small Before}
+  \scriptsize
+  LM393 comparator\\[2pt]
+  Always-on: $1.5\,\text{mA}$\\
+  Piezo-based, no data\\
+  Manual threshold (trimmer)
+  \end{colorblock}
 \end{column}
+\hfill
+\begin{column}{0.48\textwidth}
+  \begin{colorblock}[white]{maincolor}{\small After}
+  \scriptsize
+  ADXL362 accelerometer\\[2pt]
+  Activity detect: $270\,\text{nA}$\\
+  INT1 $\rightarrow$ GPIO wakeup\\
+  \textbf{5500$\times$ less current}
+  \end{colorblock}
+\end{column}
+\end{columns}
 
-\begin{column}{0.42\textwidth}
-\centering
-\small\textbf{ADC active time per second}\\[10pt]
-\begin{tikzpicture}[scale=1.0]
-  % Old: Piezo 20kHz — full bar (top)
-  \fill[sintefred!70] (0, 1.2) rectangle (3.0, 1.85);
-  \node[font=\scriptsize, anchor=west] at (0.05, 1.52) {\textcolor{white}{Piezo 20\,kHz}};
-  \node[font=\tiny,  anchor=west] at (3.07, 1.52) {100\%};
-  % New: ADXL362 200Hz — 1% bar (exaggerated to min visible width)
-  \fill[sintefgreen!80] (0, 0.2) rectangle (0.08, 0.85);
-  \node[font=\scriptsize, anchor=west] at (0.10, 0.52) {ADXL362 200\,Hz};
-  \node[font=\tiny,  anchor=west] at (3.07, 0.52) {1\%};
-  % Axis
-  \draw[->] (0, 0) -- (3.3, 0) node[right, font=\tiny]{active fraction};
-  \node[font=\tiny, below=2pt] at (0,   0) {0};
-  \node[font=\tiny, below=2pt] at (3.0, 0) {100\%};
-\end{tikzpicture}
 \vspace{0.3cm}
+\begin{itemize}\setlength\itemsep{4pt}
+  \item \textbf{SW-configurable threshold}: activity level set via SPI register; no physical potentiometer needed on re-deployment
+  \item \textbf{200\,Hz sampling}: window vibrations are sub-100\,Hz
+  \item \textbf{Internal mount}: avoids weather exposure; tunable SW threshold compensates for reduced sensitivity
+\end{itemize}
+
+\vspace{0.2cm}
 \begin{block}{Net effect}
 \scriptsize Threshold reconfiguration: SPI register write at boot; no physical enclosure access required.\\
 HW threshold ($150$\,mg default) blocks traffic, HVAC, footsteps: MCU never wakes on ambient vibrations.
 \end{block}
-\end{column}
 
-\end{columns}
 \note{
   The original design used a piezoelectric disc + LM393 comparator. The LM393
   threshold was set by a physical potentiometer trimmer on the PCB; every time
