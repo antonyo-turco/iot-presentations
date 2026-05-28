@@ -1,63 +1,6 @@
 % Improvements 3 & 4
 
 % --- Improvement 3: Detection ---
-\begin{frame}{Detection: Fixed threshold $\rightarrow$ On-device K-means ML}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{sintefred}{Initial choice}
-  \large
-  \begin{itemize}
-    \item Single amplitude threshold
-    \item High false positive rate
-    \item No learning, no adaptation
-  \end{itemize}
-  \end{colorblock}
-\end{column}
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{maincolor}{Result}
-  \large
-  \begin{itemize}
-    \item 256-pt FFT, 51 features
-    \item Online K-Means++ ($K=10$) trained on-site
-    \item Per-cluster $\mu + 3\sigma$ threshold
-  \end{itemize}
-  \end{colorblock}
-\end{column}
-\end{columns}
-\vspace{0.4cm}
-\centering
-\small Alarm iff $d^{*} = \min_{k}\|x - c_k\| > \theta_k$;\quad $\theta_k = \mu_k + 3\sigma_k$ fitted from 24\,h baseline
-\end{frame}
-
-% --- Why on-device ---
-\begin{frame}[shrink=15]{Why On-Device Learning?}
-\begin{columns}[T,onlytextwidth]
-
-\begin{column}{0.32\textwidth}
-  \centering
-  \textcolor{sintefred}{\scriptsize\textbf{Environment heterogeneity}}\\[3pt]
-  \includegraphics[width=\linewidth,keepaspectratio]{images/ml_1}\\[4pt]
-  \scriptsize Urban (double-pane) and Rural (single-pane) windows produce structurally different PSDs; a pre-trained cloud model does not transfer between environments.
-\end{column}
-
-\begin{column}{0.32\textwidth}
-  \centering
-  \textcolor{sinteflilla}{\scriptsize\textbf{WiFi energy overhead $\times$16}}\\[3pt]
-  \includegraphics[width=\linewidth,keepaspectratio]{images/ml_2}\\[4pt]
-  \scriptsize EXPLORING (24\,h): on-device $0.79$\,Wh vs.\ WiFi $12.67$\,Wh; $16\times$ overhead incompatible with 3500\,mAh energy budget.
-\end{column}
-
-\begin{column}{0.32\textwidth}
-  \centering
-  \textcolor{maincolor}{\scriptsize\textbf{Isolation Forest exceeds device RAM}}\\[3pt]
-  \includegraphics[width=\linewidth,keepaspectratio]{images/ml_3}\\[4pt]
-  \scriptsize Isolation Forest: $4.7$\,MB; K-Means + novelty buffer: $42$\,KB; ESP32-C3 available: $400$\,KB.
-\end{column}
-
-\end{columns}
-\end{frame}
-
-% --- K-Means++ pipeline deep-dive ---
 \begin{frame}[shrink=5]{On-Device K-Means++ Pipeline}
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.31\textwidth}
@@ -112,6 +55,32 @@
   K-Means++ initialization (vs plain K-Means random) was chosen to avoid
   degenerate centroid placement that makes early training epochs unreliable.
 }
+\end{frame}
+
+% --- Why on-device ---
+\begin{frame}[shrink=15]{Why On-Device Learning?}
+\begin{columns}[T,onlytextwidth]
+
+\begin{column}{0.56\textwidth}
+  \centering
+  \textcolor{sintefred}{\scriptsize\textbf{Environment heterogeneity}}\\[3pt]
+  \includegraphics[width=\linewidth,keepaspectratio]{images/ml_1}\\[4pt]
+  \scriptsize Urban (double-pane) and Rural (single-pane) windows produce structurally different PSDs; a pre-trained cloud model does not transfer between environments.
+\end{column}
+\hfill
+\begin{column}{0.38\textwidth}
+  \centering
+  \textcolor{sinteflilla}{\scriptsize\textbf{WiFi energy overhead $\times$16}}\\[3pt]
+  \includegraphics[width=0.85\linewidth,keepaspectratio]{images/ml_2}\\[2pt]
+  \tiny EXPLORING (24\,h): on-device $0.79$\,Wh vs.\ WiFi $12.67$\,Wh; $16\times$ overhead incompatible with 3500\,mAh energy budget.
+  
+  \vspace{0.4cm}
+  \textcolor{maincolor}{\scriptsize\textbf{Isolation Forest exceeds device RAM}}\\[3pt]
+  \includegraphics[width=0.85\linewidth,keepaspectratio]{images/ml_3}\\[2pt]
+  \tiny Isolation Forest: $4.7$\,MB; K-Means + novelty buffer: $42$\,KB; ESP32-C3 available: $400$\,KB.
+\end{column}
+
+\end{columns}
 \end{frame}
 
 % --- K-Means++ implementation details ---
