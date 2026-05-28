@@ -11,6 +11,7 @@ all: $(OUTPUT_DIR)/$(MAIN).pdf
 
 $(OUTPUT_DIR)/$(MAIN).pdf: $(MAIN).tex $(wildcard *.sty) $(SLIDES) | $(BUILD_DIR) $(OUTPUT_DIR)
 	pdflatex $(PDFLATEX_FLAGS) $(MAIN).tex
+	pdflatex $(PDFLATEX_FLAGS) $(MAIN).tex
 	cp $(BUILD_DIR)/$(MAIN).pdf $(OUTPUT_DIR)/$(MAIN).pdf
 
 $(BUILD_DIR) $(OUTPUT_DIR):
