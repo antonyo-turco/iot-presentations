@@ -1,5 +1,5 @@
-% Energy & Duty Cycle slides (2 slides)
-
+% System Analysis section
+\section{System Analysis}
 
 % --- Slide 1: Duty Cycle ---
 \begin{frame}{Duty Cycle}
@@ -11,16 +11,19 @@
 \setbeamercolor{itemize item}{fg=bulletcol}
 \setbeamercolor{itemize subitem}{fg=bulletcol}
 \setbeamercolor{itemize subsubitem}{fg=bulletcol}
-  \begin{itemize}\setlength{\itemsep}{2pt}\setlength{\parskip}{0pt}
-  \item \textbf{Alarm rate:} 12 alarms/hour = 288 alarms/day
-  \item \textbf{Active time per alarm:} 30\,\text{s} $\Rightarrow$ 86\,400\,\text{s/day} total wake time (worst case: 1 alarm/s)
-  \item \textbf{Duty cycle:} 10\%
+  \begin{itemize}\setlength{\itemsep}{4pt}\setlength{\parskip}{0pt}
+  \item \textbf{Alarm rate:} up to 12 events/hour
+  \item \textbf{Active time per alarm:} ${\sim}3\,\text{s}$
+        (2.56\,s ADC @ 200\,Hz, 512 samples + $<200$\,ms FFT + TX)
+  \item $12 \times 3\,\text{s} = 36\,\text{s/hr}$
+        $\Rightarrow$ \textbf{duty cycle: 1\%}
 \end{itemize}
 
-\vspace{0cm}
-\begin{block}{Key principle}
-\scriptsize\setlength{\parskip}{0pt} The MCU is \textbf{off by default.}\\
-The comparator never sleeps.
+\vspace{0.2cm}
+\begin{block}{Operating mode}
+\scriptsize\setlength{\parskip}{0pt}
+ESP32-C3 deep sleep: $50\,\mu\text{A}$; ADXL362 activity detect: $270\,\text{nA}$.\\
+INT1 fires on threshold crossing; MCU wakes via GPIO.
 \end{block}
 }
 
@@ -28,31 +31,20 @@ The comparator never sleeps.
 \begin{column}{0.44\textwidth}
 \centering
 \begin{tikzpicture}[scale=0.9]
-  % Duty cycle bar (visual simplified)
+  % Sleep bar (99% — full width)
   \fill[maincolor!20] (0,0) rectangle (4, 0.7);
-  \fill[maincolor]    (0,0) rectangle (0.4, 0.7);
-  \node[font=\small, maincolor] at (2.2, 0.35) {Sleep  90\%};
-  % Active bar
-  \fill[sintefred!80] (0,1.1) rectangle (0.8, 1.8);
-  \node[font=\small, align=left, anchor=west] at (0.6, 1.45) {Active  10\%};
+  \node[font=\small, maincolor] at (2.0, 0.35) {Sleep  99\%};
+  % Active bar (1% — shown exaggerated for visibility)
+  \fill[sintefred!80] (0,1.1) rectangle (0.16, 1.8);
+  \node[font=\small, align=left, anchor=west] at (0.24, 1.45) {Active  1\%};
   % Annotation
-  \draw[<->, thick, darkgray] (0, -0.6) -- (4, -0.6)
-    node[midway, below, font=\scriptsize]{24 hours};
+  \draw[<->, thick, darkgray] (0, -0.55) -- (4, -0.55)
+    node[midway, below, font=\scriptsize]{1 hour};
+  % Not-to-scale note
+  \node[font=\tiny, darkgray, anchor=west] at (0, -1.0)
+    {(active bar not to scale)};
 \end{tikzpicture}
 \end{column}
 \end{columns}
 \end{frame}
 
-% --- Slide 2: Wiring diagram & photo ---
-\begin{frame}{Wiring \& Photo}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.50\textwidth}
-  \centering
-  \includegraphics[width=0.95\textwidth,keepaspectratio]{images/electric_schema.jpeg}
-\end{column}
-\begin{column}{0.50\textwidth}
-  \centering
-  \includegraphics[width=0.95\textwidth,keepaspectratio]{images/electric_photo.jpeg}
-\end{column}
-\end{columns}
-\end{frame}

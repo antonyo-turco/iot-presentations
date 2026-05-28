@@ -9,10 +9,10 @@
 \toprule
 \textbf{Requirement} & \textbf{Target} & \textbf{Achieved} & \textbf{Mechanism} \\
 \midrule
-Quiescent current  & $<100\,\mu$A    & $\approx 52\,\mu$A  & ESP32-C3 deep sleep + ADXL362 \\
+Quiescent current  & $<100\,\mu$A    & $\approx 50\,\mu$A  & ESP32-C3 deep sleep + ADXL362 \\
 Active current     & $<25$ mA        & $\approx 20$ mA     & ESP32-C3 RISC-V              \\
 Detection latency  & $<5$ s          & $\approx 2.7$ s     & HW interrupt + FFT           \\
-Battery life       & $>30$ days      & $\approx 52$ days   & Duty cycle + TLC393          \\
+Battery life       & $>30$ days      & $\approx 1.6$ years & Duty cycle + ADXL362         \\
 Wireless range     & $>10$ m         & $\approx 50$ m      & ESP-NOW 2.4 GHz              \\
 \bottomrule
 \end{tabular}
@@ -21,9 +21,9 @@ Wireless range     & $>10$ m         & $\approx 50$ m      & ESP-NOW 2.4 GHz    
 \normalsize\textbf{Quiescent mode} (nothing happens):
 \[
   I_{q} = \underbrace{50\,\mu\text{A}}_{\text{MCU sleep}}
-        + \underbrace{1.8\,\mu\text{A}}_{\text{ADXL362 wakeup mode}}
-        \approx 52\,\mu\text{A}
+        + \underbrace{270\,\text{nA}}_{\text{ADXL362 activity detect}}
+        \approx 50\,\mu\text{A}
 \]
 \vspace{-0.3em}
-MCU wakes \emph{only} when ADXL362 INT1 fires --- the system is off by default.
+MCU wakes \emph{only} when ADXL362 INT1 fires; the system is off by default.
 \end{frame}

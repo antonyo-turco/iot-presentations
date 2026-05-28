@@ -1,10 +1,109 @@
-% Security slide
+% Security slides
 \section{Security}
 
+% --- Frame S1: Hardware security foundation ---
+\begin{frame}[shrink=20]{Hardware Security Foundation}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.52\textwidth}
+  \begin{block}{ESP-IDF Framework}
+  \scriptsize All firmware uses \textbf{ESP-IDF} (not Arduino) for direct
+  hardware-level security API access.
+  \end{block}
+  \vspace{0.1cm}
+  \begin{itemize}\setlength\itemsep{3pt}
+    \item \textbf{Encrypted Flash (AES-XTS)}: entire firmware image on NOR flash
+          encrypted at rest; plaintext never leaves the chip
+    \item \textbf{Encrypted NVS partition}: crypto keys and ML model centroids stored
+          in a dedicated NVS region with separate AES encryption
+    \item \textbf{eFuse write-once protection}: JTAG debug port disabled, bootloader
+          locked; survives firmware reflash; root of trust for the device
+  \end{itemize}
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\begin{tikzpicture}[scale=1.3, transform shape,
+  layer/.style={draw=maincolor, rounded corners=3pt, minimum width=3.4cm,
+                minimum height=0.58cm, align=center, font=\scriptsize,
+                fill=sintefgrey},
+  sec/.style={draw=sintefgreen, rounded corners=3pt, minimum width=3.4cm,
+              minimum height=0.58cm, align=center, font=\scriptsize,
+              fill=sintefgreen!15}
+]
+\node[layer] (chip)  at (0, 4.0) {\textbf{ESP32-C3 SoC}};
+\node[sec]   (efuse) at (0, 3.1) {eFuse: JTAG off, bootloader lock};
+\node[sec]   (flash) at (0, 2.2) {Flash encrypted (AES-XTS)};
+\node[sec]   (nvs)   at (0, 1.3) {NVS partition encrypted};
+\node[layer] (firm)  at (0, 0.4) {Firmware / ML centroids};
+\draw[->, maincolor, thick] (chip)  -- (efuse);
+\draw[->, maincolor, thick] (efuse) -- (flash);
+\draw[->, maincolor, thick] (flash) -- (nvs);
+\draw[->, maincolor, thick] (nvs)   -- (firm);
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\note{
+  The choice of ESP-IDF over Arduino is fundamental to the security architecture.
+  Arduino does not expose the esp_efuse API or the NVS encryption partition APIs
+  in a usable way. Without IDF, none of the hardware security features can be
+  configured via firmware.
+  eFuse bits are write-once and survive firmware reflashing, so even if an attacker
+  reflashes the device with a custom bootloader, the JTAG debug port stays disabled
+  and the secure boot chain remains intact. This is the hardware root of trust for
+  the entire device; it cannot be undone by software.
+}
+\end{frame}
+
+% --- Frame S2: ESP-NOW link security ---
+\begin{frame}[shrink=20]{Link Security: ESP-NOW (Sensor $\rightarrow$ Gateway)}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.52\textwidth}
+  \begin{itemize}\setlength\itemsep{3pt}
+    \item \textbf{Algorithm}: AES-CCM (CCMP per 802.11); handled by Wi-Fi hardware accelerator ($<0.1$\,ms overhead)
+    \item \textbf{PMK} (Primary Master Key): 16-byte key that initialises the ESP-NOW security subsystem; used to derive session material
+    \item \textbf{LMK} (Local Master Key): 16-byte key unique per registered peer (\texttt{.encrypt = true}); all sensor$\leftrightarrow$gateway frames encrypted with this LMK
+    \item Keys stored in \textbf{encrypted NVS} on both devices; no re-keying overhead on deep-sleep wake cycles
+  \end{itemize}
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\small\textbf{ESP-NOW Secured Frame}\\[8pt]
+\begin{tikzpicture}[scale=1.5, transform shape,
+  fld/.style={draw=maincolor, minimum height=0.6cm, align=center,
+              font=\tiny, fill=sintefgrey},
+  enc/.style={draw=sintefgreen, fill=sintefgreen!15, minimum height=0.6cm,
+              align=center, font=\tiny}
+]
+\node[fld, minimum width=1.1cm] (mac) at (0,0)    {MAC\\header};
+\node[enc, minimum width=1.5cm] (ccm) at (1.3,0)  {AES-CCM\\payload};
+\node[enc, minimum width=1.0cm] (mic) at (2.55,0) {MIC\\tag};
+
+\draw[<->, sintefgreen, thick] (0.75,-0.55) -- (3.05,-0.55)
+  node[midway, below, font=\tiny]{LMK-encrypted + authenticated};
+\end{tikzpicture}
+
+\vspace{0.5cm}
+\begin{block}{PMK/LMK hierarchy}
+\scriptsize A compromised sensor leaks only its LMK, not the master key used to initialise other peers.
+\end{block}
+\end{column}
+\end{columns}
+\note{
+  AES-CCM is Counter with CBC-MAC: it provides both encryption (CTR mode) and
+  message authentication (CBC-MAC). The MIC is the 802.11 CCMP equivalent of an
+  authentication tag; it detects any frame tampering in transit.
+  The PMK/LMK hierarchy is an important security property: if one sensor is
+  physically stolen and its NVS keys extracted, the attacker obtains only the LMK
+  for that one sensor. The PMK and the LMKs of all other sensors remain uncompromised.
+  The AES operation itself runs in the Wi-Fi hardware accelerator, so the
+  encryption overhead is negligible relative to the ESP-NOW frame transmission time.
+}
+\end{frame}
+
+% --- Frame S3: Three independent encrypted links overview ---
 {
 \setbeamertemplate{headline}{}
 \setbeamertemplate{footline}{}
-\begin{frame}[plain]{Security --- Three Independent Encrypted Links}
+\begin{frame}[plain]{Security: Three Independent Encrypted Links}
 \begin{tikzpicture}[remember picture, overlay]
   \node[anchor=center] at (current page.center) {%
     \includegraphics[width=\paperwidth,height=\paperheight]{images/security_sapienza.png}%

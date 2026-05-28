@@ -3,31 +3,28 @@
 
 \begin{frame}{The Problem in 10 Seconds}
 \begin{center}
-  \large\textbf{Monitor a door 24/7, without wiring, for months on a battery.}
+  \large\textbf{Detect intrusions through windows, without wiring, for months on a battery.}
 \end{center}
 
-\vspace{0.15cm}
+\vspace{0.2cm}
 \begin{columns}[T, onlytextwidth]
 \begin{column}{0.48\textwidth}
-  \textbf{The constraints}
-  \begin{itemize}\setlength\itemsep{2pt}
-    \item No wiring --- renters, retrofit installs
+  \textbf{Constraints}
+  \begin{itemize}\setlength\itemsep{3pt}
+    \item No wiring (renters, retrofit installs)
     \item Battery must last months, not days
-    \item False positives (traffic, wind) unacceptable
+    \item Sub-\texteuro10 per sensor node
+    \item Must detect vibrations accurately from inside the window frame
   \end{itemize}
 \end{column}
 \begin{column}{0.48\textwidth}
-  \textbf{Our approach}
-  \begin{itemize}\setlength\itemsep{2pt}
-    \item Sub-\texteuro10 sensor, $<$63\,$\mu$A idle
-    \item On-device K-means learns the door signature
-    \item Alarms only on genuine knock events
+  \textbf{Requirements}
+  \begin{itemize}\setlength\itemsep{3pt}
+    \item Quiescent current $<100\,\mu$A
+    \item Detection latency $<5\,\text{s}$
+    \item Battery life $>30$ days
+    \item False positive rate near zero (traffic, wind, rain unacceptable)
   \end{itemize}
 \end{column}
 \end{columns}
-
-\vspace{0.15cm}
-\begin{block}{Result}
-  Detection in $<$3 s, $>$50 days on 2600 mAh, three independently encrypted links.
-\end{block}
 \end{frame}

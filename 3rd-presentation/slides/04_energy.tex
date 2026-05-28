@@ -1,0 +1,74 @@
+% Energy calculation and battery life
+
+% --- Energy Calculation ---
+\begin{frame}{Energy Calculation}
+  \textbf{Measured parameters}
+  \begin{itemize}
+    \item Quiescent: ESP32-C3 $50\,\mu\text{A}$ + ADXL362 $270\,\text{nA}$ $\rightarrow$ $I_{sleep}\approx50\,\mu\text{A}$
+    \item Active: ESP32-C3 $20\,\text{mA}$; WiFi TX peak $+100\,\text{mA}$ ($<2\,\text{ms}$/alarm, negligible)
+    \item Target duty cycle: $D=1\%$ (36\,s active per hour)
+    \item Battery: 3500\,mAh
+  \end{itemize}
+
+  \textbf{Average current}
+  \[
+    I_{avg} = D\cdot I_{active} + (1-D)\cdot I_{sleep}
+           = 0.01\times20\,\mathrm{mA} + 0.99\times0.050\,\mathrm{mA}
+           \approx 0.250\,\mathrm{mA}
+  \]
+  \textbf{Estimated battery life}
+  \[
+    t_{life} = \frac{3500\,\mathrm{mAh}}{0.250\,\mathrm{mA}} = 14\,000\,\mathrm{h} \approx \mathbf{1.6\,\text{years}}
+  \]
+  \scriptsize WiFi TX contribution: $100\,\text{mA} \times 1.5\,\text{ms} \times 288\,\text{alarms/day} \approx 0.012\,\text{mAh/day}$, negligible.
+\end{frame}
+
+% --- Battery life vs. duty cycle table ---
+\begin{frame}{Battery Life vs.\ Duty Cycle (3500\,mAh)}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.60\textwidth}
+\centering
+\renewcommand{\arraystretch}{1.5}
+{\small
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{r r r r}
+\toprule
+\textbf{D (\%)} & \textbf{Active/hr} & \textbf{$I_{mean}$} & \textbf{Battery life} \\
+\midrule
+0.01 & 0.4\,s  & $52\,\mu\text{A}$  & 7.7 years \\
+0.1  & 3.6\,s  & $70\,\mu\text{A}$  & 5.7 years \\
+0.5  & 18\,s   & $150\,\mu\text{A}$ & 2.7 years \\
+\rowcolor{sintefgreen!30}
+\textbf{1.0} & \textbf{36\,s} & $\mathbf{250\,\mu\text{A}}$ & \textbf{1.6 years} \\
+5.0  & 3\,min  & $1.05\,\text{mA}$  & 4.6 months \\
+10.0 & 6\,min  & $2.05\,\text{mA}$  & 2.3 months \\
+20.0 & 12\,min & $4.04\,\text{mA}$  & 1.2 months \\
+50.0 & 30\,min & $10.0\,\text{mA}$  & 14.5 days \\
+\bottomrule
+\end{tabular}
+}
+\vspace{0.3cm}
+{\small $I_{mean} = D \cdot 20\,\text{mA} + (1-D) \cdot 50\,\mu\text{A}$}
+\end{column}
+\begin{column}{0.36\textwidth}
+  \begin{block}{$D = 1\%$: operating point}
+  \small 36\,s active per 3600\,s; ADXL362 INT1 gates all MCU wake events.
+  \end{block}
+  \vspace{0.4cm}
+  \begin{itemize}\setlength\itemsep{8pt}
+  \small
+    \item ADXL362 activity threshold: MCU wakes only when acceleration exceeds configured mg limit
+    \item ESP-NOW TX: $1.5$\,ms at ${\sim}200$\,mA peak; contribution $<0.01$\,mA to $I_{avg}$
+    \item $t_{life} \approx \mathbf{1.6}$\,years on 3500\,mAh
+  \end{itemize}
+\end{column}
+\end{columns}
+\note{
+  The key to achieving 1% duty cycle is the two-stage hardware gate: the ADXL362
+  activity detector only fires INT1 when accelerations exceed the configured threshold,
+  so ambient vibrations (traffic, footsteps, HVAC) never wake the MCU.
+  A naive design sampling on a timer at 10% duty cycle would drain the battery in
+  about 2.3 months on the same battery. The hardware gate buys roughly 8x more
+  battery life at our target alarm rate.
+}
+\end{frame}

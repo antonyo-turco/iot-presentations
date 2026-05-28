@@ -4,6 +4,7 @@
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric}
 \usepackage{booktabs}
 \usepackage{array}
+\usepackage{colortbl}
 \usetheme{sintef}
 
 \newcommand{\testcolor}[1]{\colorbox{#1}{\textcolor{#1}{test}}~\texttt{#1}}
@@ -24,32 +25,37 @@
 \begin{document}
 \maketitle
 
-% Problem statement (10 sec)
+% Problem statement
 \input{slides/01_opening.tex}
 
-% System architecture (TikZ figure)
+% System architecture + state machine
 \input{slides/02_introduction.tex}
 
-% Requirements with numbers
+% Quantified requirements
 \input{slides/02b_requirements.tex}
 
-% Energy & Duty Cycle
-\input{slides/03_personalization.tex}
+% --- Sensor Node ---
+% Hardware wiring & photo
+\input{slides/03_wiring.tex}
 
-% Improvements 1 & 2 (Wake-up circuit & Protocol)
+% Wake-up sensor: ADXL362
 \input{slides/04_connectivity.tex}
 
-% Improvements 3 & 4 (Acquisition & MCU) + Energy calc
+% Detection: K-Means++ pipeline + MCU
 \input{slides/04_summary.tex}
+
+% --- Edge & Gateway ---
+% Protocol (BLE->ESP-NOW) + three-tier gateway
+\input{slides/04_gateway.tex}
 
 % Security layers
 \input{slides/05_security.tex}
 
-% Detection latency
+% --- System Analysis ---
+% Duty cycle + energy + latency
+\input{slides/03_personalization.tex}
+\input{slides/04_energy.tex}
 \input{slides/06_latency.tex}
-
-% False positive handling
-\input{slides/07_false_positives.tex}
 
 \backmatter
 

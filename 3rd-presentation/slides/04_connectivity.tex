@@ -1,61 +1,68 @@
-% Improvements 1 & 2
-\section{Improvements}
-
-% --- Improvement 1: Wake-up Circuit ---
-\begin{frame}{Wake-up: LM393 comparator $\rightarrow$ ADXL362}
+%:ADXL362: merged comparison + rationale ---
+\begin{frame}[shrink=15]{Wake-up Sensor: LM393 $\rightarrow$ ADXL362}
 \begin{columns}[T,onlytextwidth]
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{sintefred}{Initial choice}
-  \large
-  \begin{itemize}
-    \item External LM393 comparator
-    \item Always-on: $1.5$\,mA
-    \item Piezo-based, no data
-  \end{itemize}
-  \end{colorblock}
-\end{column}
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{maincolor}{Result}
-  \large
-  \begin{itemize}
-    \item ADXL362 activity detector
-    \item Monitoring: $1.8\,\mu$A
-    \item INT1 $\rightarrow$ GPIO wakeup
-    \item $\mathbf{833\times}$ \textbf{less current}
-  \end{itemize}
-  \end{colorblock}
-\end{column}
-\end{columns}
-\vspace{0.5cm}
-\centering
-{\Large $1.5\,\text{mA} \xrightarrow{\text{ADXL362}} 1.8\,\mu\text{A}$}
-\end{frame}
 
-% --- Improvement 2: Protocol ---
-\begin{frame}{Protocol: BLE $\rightarrow$ ESP-NOW}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{sintefred}{Initial choice}
-  \large
-  \begin{itemize}
-    \item BLE for local comms
-    \item $\sim500$\,ms pairing
-    \item $\sim7.5$\,ms TX latency
+\begin{column}{0.54\textwidth}
+  \begin{columns}[T,onlytextwidth]
+  \begin{column}{0.48\textwidth}
+    \begin{colorblock}[white]{sintefred}{\small Before}
+    \scriptsize
+    LM393 comparator\\[2pt]
+    Always-on: $1.5\,\text{mA}$\\
+    Piezo-based, no data\\
+    Manual threshold (trimmer)
+    \end{colorblock}
+  \end{column}
+  \begin{column}{0.48\textwidth}
+    \begin{colorblock}[white]{maincolor}{\small After}
+    \scriptsize
+    ADXL362 accelerometer\\[2pt]
+    Activity detect: $270\,\text{nA}$\\
+    INT1 $\rightarrow$ GPIO wakeup\\
+    \textbf{5500$\times$ less current}
+    \end{colorblock}
+  \end{column}
+  \end{columns}
+
+  \vspace{0.35cm}
+  \begin{itemize}\setlength\itemsep{5pt}
+    \item \textbf{SW-configurable threshold}: activity level set via SPI register; no physical potentiometer needed on re-deployment
+    \item \textbf{200\,Hz sampling}: window vibrations are sub-100\,Hz; 100$\times$ less ADC active time vs.\ 20\,kHz piezo
+    \item \textbf{Internal mount}: avoids weather exposure; tunable SW threshold compensates for reduced sensitivity
   \end{itemize}
-  \end{colorblock}
 \end{column}
-\begin{column}{0.46\textwidth}
-  \begin{colorblock}[white]{maincolor}{Result}
-  \large
-  \begin{itemize}
-    \item ESP-NOW
-    \item \textbf{No pairing overhead}
-    \item $<2$\,ms TX
-  \end{itemize}
-  \end{colorblock}
-\end{column}
-\end{columns}
-\vspace{0.5cm}
+
+\begin{column}{0.42\textwidth}
 \centering
-{\Large Shorter radio-on time $=$ \textbf{less energy per alarm}}
+\small\textbf{ADC active time per second}\\[10pt]
+\begin{tikzpicture}[scale=1.0]
+  % Old: Piezo 20kHz — full bar (top)
+  \fill[sintefred!70] (0, 1.2) rectangle (3.0, 1.85);
+  \node[font=\scriptsize, anchor=west] at (0.05, 1.52) {\textcolor{white}{Piezo 20\,kHz}};
+  \node[font=\tiny,  anchor=west] at (3.07, 1.52) {100\%};
+  % New: ADXL362 200Hz — 1% bar (exaggerated to min visible width)
+  \fill[sintefgreen!80] (0, 0.2) rectangle (0.08, 0.85);
+  \node[font=\scriptsize, anchor=west] at (0.10, 0.52) {ADXL362 200\,Hz};
+  \node[font=\tiny,  anchor=west] at (3.07, 0.52) {1\%};
+  % Axis
+  \draw[->] (0, 0) -- (3.3, 0) node[right, font=\tiny]{active fraction};
+  \node[font=\tiny, below=2pt] at (0,   0) {0};
+  \node[font=\tiny, below=2pt] at (3.0, 0) {100\%};
+\end{tikzpicture}
+\vspace{0.3cm}
+\begin{block}{Net effect}
+\scriptsize Threshold reconfiguration: SPI register write at boot; no physical enclosure access required.\\
+HW threshold ($150$\,mg default) blocks traffic, HVAC, footsteps: MCU never wakes on ambient vibrations.
+\end{block}
+\end{column}
+
+\end{columns}
+\note{
+  The original design used a piezoelectric disc + LM393 comparator. The LM393
+  threshold was set by a physical potentiometer trimmer on the PCB; every time
+  the sensor was moved to a window with different vibration characteristics,
+  someone had to open the enclosure and turn a screwdriver. ADXL362 eliminates
+  this: the activity threshold is a 16-bit register written over SPI at boot,
+  stored in encrypted NVS, so reconfiguration requires no physical access.
+}
 \end{frame}

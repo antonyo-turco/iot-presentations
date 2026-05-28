@@ -1,0 +1,83 @@
+% Edge & Gateway section
+\section{Edge \& Gateway}
+
+% Protocol improvement
+\begin{frame}{Protocol: BLE $\rightarrow$ ESP-NOW}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{sintefred}{Initial choice}
+  \large
+  \begin{itemize}
+    \item BLE for local comms
+    \item $\sim500$\,ms pairing
+    \item $\sim7.5$\,ms TX latency
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\begin{column}{0.46\textwidth}
+  \begin{colorblock}[white]{maincolor}{Result}
+  \large
+  \begin{itemize}
+    \item ESP-NOW
+    \item \textbf{No pairing overhead}
+    \item $<2$\,ms TX
+  \end{itemize}
+  \end{colorblock}
+\end{column}
+\end{columns}
+\vspace{0.4cm}
+\centering
+\small ESP-NOW radio-on: $<2$\,ms, no association step vs.\ BLE pairing ${\sim}500$\,ms $+$ $7.5$\,ms TX
+\end{frame}
+
+% Gateway three-tier architecture rationale
+\begin{frame}[shrink=25]{Three-Tier Architecture: Why a Dedicated Gateway?}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{0.52\textwidth}
+  \begin{itemize}\setlength\itemsep{3pt}
+    \item \textbf{ESP-NOW stays local}: sensor never touches Wi-Fi; no energy cost of association or scanning when router changes or reboots
+    \item \textbf{Hub is transport-agnostic}: gateway exports UART + AES-128-GCM; hub can be Raspberry Pi, laptop, or cloud VM; not limited to another ESP32
+    \item \textbf{Network isolation}: ESP-NOW subnet is air-gapped from the internet; gateway is the single trusted boundary between sensor network and IP world
+  \end{itemize}
+  \vspace{0.1cm}
+  \begin{block}{Isolation property}
+  \scriptsize Sensor carries no IP stack and no internet credentials; PMK/LMK scope is limited to the local ESP-NOW subnet.
+  \end{block}
+\end{column}
+\begin{column}{0.44\textwidth}
+\centering
+\begin{tikzpicture}[scale=1.3, transform shape,
+  box/.style={draw=maincolor, rounded corners=4pt, minimum width=2.7cm,
+              minimum height=0.65cm, align=center, font=\scriptsize,
+              fill=sintefgrey},
+  arr/.style={->, thick, maincolor}
+]
+\node[box] (sensor) at (0, 4.2) {\textbf{Sensor}\\ESP32-C3};
+\node[box] (gw)     at (0, 2.8) {\textbf{Gateway}\\ESP32};
+\node[box] (hub)    at (0, 1.4) {\textbf{Hub}\\any serial device};
+\node[box] (cloud)  at (0, 0.0) {\textbf{Cloud / App}\\MQTT broker};
+
+\draw[arr] (sensor) -- (gw)
+  node[midway, right=2pt, font=\tiny, text=sinteflilla]
+  {ESP-NOW AES-CCM};
+\draw[arr] (gw) -- (hub)
+  node[midway, right=2pt, font=\tiny, text=sintefgreen]
+  {UART AES-128-GCM};
+\draw[arr] (hub) -- (cloud)
+  node[midway, right=2pt, font=\tiny, text=sintefcyan]
+  {MQTT TLS};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\note{
+  Alternative considered: direct sensor to hub via Wi-Fi MQTT (skip the gateway
+  tier entirely). Rejected for two reasons:
+  (1) Wi-Fi association costs approximately 300 ms and ~40 mA every wake cycle,
+      completely dominating the 1.5 ms / 200 mA ESP-NOW TX that we use instead;
+      the duty-cycle energy budget depends on radio-on time under 2 ms per alarm.
+  (2) The sensor would need to store Wi-Fi credentials in firmware or NVS,
+      enlarging the attack surface: a stolen sensor could reveal the home Wi-Fi PSK.
+      With the gateway tier, sensor credentials are only ESP-NOW PMK/LMK keys,
+      which give access only to the local ESP-NOW subnet, not the internet.
+}
+\end{frame}
