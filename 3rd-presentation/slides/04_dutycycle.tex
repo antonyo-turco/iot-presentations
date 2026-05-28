@@ -3,29 +3,32 @@
 
 
 
-% --- Slide 1: Window Energy Analysis ---
+% --- Slide 2: Window Energy Analysis ---
 \begin{frame}{Window Energy: Alarm vs. No Alarm}
 \begin{columns}[T,onlytextwidth]
 \begin{column}{0.48\textwidth}
-  \centering
+  {\centering
   \textbf{\textcolor{sintefred}{Alarm Detected}}
   
   \vspace{0.2cm}
-  \includegraphics[width=\linewidth,keepaspectratio]{images/window energy with alarm detected.png}
+  \includegraphics[width=\linewidth,keepaspectratio]{images/window energy with alarm detected.png}\par}
   
-  \vspace{0.2cm}
-  {\scriptsize Signal energy over time during an active intrusion attempt. A rapid escalation in vibration intensity creates a major peak (reaching 200) that triggers the alarm classification.}
+  \vspace{0.25cm}
+  {\centering\scriptsize Vibration profile during an active intrusion attempt.\\[0.1cm]
+  The energy rapidly escalates past 200, breaching the Dynamic Cluster Threshold and triggering an alarm.\par}
 \end{column}
 \hfill
 \begin{column}{0.48\textwidth}
-  \centering
+  {\centering
   \textbf{\textcolor{sintefgreen}{No Alarm Detected}}
   
   \vspace{0.2cm}
-  \includegraphics[width=\linewidth,keepaspectratio]{images/window energy with no alarm detected.png.png}
+  \includegraphics[width=\linewidth,keepaspectratio]{images/window energy with no alarm detected.png.png}\par}
   
-  \vspace{0.2cm}
-  {\scriptsize Signal energy over time during ambient disturbances. The vibration remains within baseline limits (peaking around 35), which safely falls below the alarm threshold to prevent a false positive.}
+  \vspace{0.25cm}
+  {\centering\scriptsize Normal environmental vibrations (wind, raindrops).\\[0.1cm]
+  Signal peaks around 35, safely remaining within baseline boundaries and preventing false triggers.\par}
 \end{column}
 \end{columns}
 \end{frame}
+
